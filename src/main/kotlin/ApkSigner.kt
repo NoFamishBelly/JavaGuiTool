@@ -198,7 +198,7 @@ private fun initFrame() {
         //禁止最大化
         isResizable = false
         //设置高/宽/位置
-        setBounds(500, 200, 500, 500)
+        setBounds(500, 200, 500, 440)
         //可见
         isVisible = true
     }
