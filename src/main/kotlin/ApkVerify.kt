@@ -1,6 +1,8 @@
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JOptionPane
@@ -8,7 +10,7 @@ import javax.swing.JTextField
 
 
 private val mFrame by lazy {
-    JFrame("验签工具 apksigner")
+    JFrame("验签工具")
 }
 
 
@@ -26,7 +28,8 @@ fun main() {
 
 private fun setLayout() {
     selectInstallationPackageLayout()
-    signLayout()
+    verifyApkSignLayout()
+    verifyJarSignLayout()
 }
 
 
@@ -34,25 +37,36 @@ private fun setLayout() {
  * 选择安装包布局
  */
 private val selectInstallationPackageLayout = {
-    mInstallationPackageField.setBounds(10, 10, TEXT_FIELD_WIDTH, VIEW_HEIGHT)
+    mInstallationPackageField.setBounds(10, 10, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_50)
     mFrame.add(mInstallationPackageField)
 
-    val selectInstallationPackageButton = JButton("选择apk")
-    selectInstallationPackageButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE)
-    selectInstallationPackageButton.setBounds(320, 10, BUTTON_WIDTH, VIEW_HEIGHT)
+    val selectInstallationPackageButton = JButton("选择apk/aab")
+    selectInstallationPackageButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
+    selectInstallationPackageButton.setBounds(320, 10, BUTTON_WIDTH_150, VIEW_HEIGHT_50)
     selectInstallationPackageButton.addActionListener(ApkVerifySelectInstallationPackageButtonActionListener())
     mFrame.add(selectInstallationPackageButton)
 }
 
 
 /**
- * 点击签名布局
+ * 点击验签布局 - apksigner
  */
-private val signLayout = {
-    val signButton = JButton("验证签名")
-    signButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE)
-    signButton.setBounds(10, 120, 460, 100)
+private val verifyApkSignLayout = {
+    val signButton = JButton("验证签名 - apksigner (仅限apk)")
+    signButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
+    signButton.setBounds(10, 70, 460, VIEW_HEIGHT_50)
     signButton.addActionListener(ApkVerifySignButtonActionListener())
+    mFrame.add(signButton)
+}
+
+/**
+ * 点击验签布局 - jarsigner
+ */
+private val verifyJarSignLayout = {
+    val signButton = JButton("验证签名 - jarsigner")
+    signButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
+    signButton.setBounds(10, 130, 460, VIEW_HEIGHT_50)
+    signButton.addActionListener(JarVerifySignButtonActionListener())
     mFrame.add(signButton)
 }
 
@@ -67,7 +81,7 @@ private class ApkVerifySelectInstallationPackageButtonActionListener : ActionLis
 }
 
 /**
- * 点击验签
+ * 点击验签 - apksigner
  */
 private class ApkVerifySignButtonActionListener : ActionListener {
     override fun actionPerformed(e: ActionEvent?) {
@@ -83,16 +97,32 @@ private class ApkVerifySignButtonActionListener : ActionListener {
             return
         }
 
-        verifySignProcess()
+        verifyApkSignProcess()
 
     }
 }
 
 
 /**
- *  验签进程
+ * 点击验签 - jarsigner
  */
-private fun verifySignProcess() {
+private class JarVerifySignButtonActionListener : ActionListener {
+    override fun actionPerformed(e: ActionEvent?) {
+        if (mInstallationPackageField.text.isEmpty()) {
+            //安装包为空
+            JOptionPane.showMessageDialog(null, "安装包不可为空")
+            return
+        }
+
+        verifyJarSignProcess()
+    }
+}
+
+
+/**
+ *  验签进程 - apksigner
+ */
+private fun verifyApkSignProcess() {
     val installationPackage = mInstallationPackageField.text
 
     try {
@@ -119,6 +149,54 @@ private fun verifySignProcess() {
 //        reader.close()
 //        inputStream.close()
 
+    } catch (e: Exception) {
+        e.printStackTrace()
+        println(e.message)
+        JOptionPane.showMessageDialog(null, e.message)
+    }
+}
+
+
+/**
+ *  验签进程 - jarsigner
+ */
+private fun verifyJarSignProcess() {
+    val installationPackage = mInstallationPackageField.text
+
+    try {
+        val cmd = "jarsigner -verify -verbose -certs $installationPackage"
+
+        val pb = ProcessBuilder("cmd", "/c", "start $cmd")
+        val process = pb.start()
+
+//        // 获取命令行窗口输出流
+//        val inputStream = process.inputStream
+//        val reader = BufferedReader(InputStreamReader(inputStream))
+//
+//        // 读取输出信息
+//        var line: String?
+//        while (reader.readLine().also { line = it } != null) {
+//            println(line)
+//        }
+
+        // 等待命令执行完成
+        val exitCode: Int = process.waitFor()
+        println("Exit Code: $exitCode")
+
+//        // 关闭资源
+//        reader.close()
+//        inputStream.close()
+
+//        val reader = BufferedReader(InputStreamReader(Runtime.getRuntime().exec(cmd).inputStream, "GB2312"))
+//        val message = StringBuilder("")
+//        var line: String? = reader.readLine()
+//        while (line != null && line != "") {
+//            message.append(line).append("\n")
+//            line = reader.readLine()
+//        }
+//        if (message.toString() != "") {
+//            JOptionPane.showMessageDialog(null, message)
+//        }
     } catch (e: Exception) {
         e.printStackTrace()
         println(e.message)

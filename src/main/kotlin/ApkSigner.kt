@@ -48,12 +48,12 @@ private fun setLayout() {
  * 选择签名文件布局
  */
 private val selectSignFileLayout = {
-    mSignFileField.setBounds(10, 10, TEXT_FIELD_WIDTH, VIEW_HEIGHT)
+    mSignFileField.setBounds(10, 10, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_100)
     mFrame.add(mSignFileField)
 
     val selectSignFileButton = JButton("选择签名文件")
-    selectSignFileButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE)
-    selectSignFileButton.setBounds(320, 10, BUTTON_WIDTH, VIEW_HEIGHT)
+    selectSignFileButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
+    selectSignFileButton.setBounds(320, 10, BUTTON_WIDTH_150, VIEW_HEIGHT_100)
     selectSignFileButton.addActionListener(ApkSelectSignFileButtonActionListener())
     mFrame.add(selectSignFileButton)
 }
@@ -63,12 +63,12 @@ private val selectSignFileLayout = {
  * 选择安装包布局
  */
 private val selectInstallationPackageLayout = {
-    mInstallationPackageField.setBounds(10, 120, TEXT_FIELD_WIDTH, VIEW_HEIGHT)
+    mInstallationPackageField.setBounds(10, 120, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_100)
     mFrame.add(mInstallationPackageField)
 
     val selectInstallationPackageButton = JButton("选择apk")
-    selectInstallationPackageButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE)
-    selectInstallationPackageButton.setBounds(320, 120, BUTTON_WIDTH, VIEW_HEIGHT)
+    selectInstallationPackageButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
+    selectInstallationPackageButton.setBounds(320, 120, BUTTON_WIDTH_150, VIEW_HEIGHT_100)
     selectInstallationPackageButton.addActionListener(ApkSelectInstallationPackageButtonActionListener())
     mFrame.add(selectInstallationPackageButton)
 }
@@ -94,8 +94,8 @@ private val chooseV1V2V3 = {
  */
 private val signLayout = {
     val signButton = JButton("签名")
-    signButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE)
-    signButton.setBounds(10, 290, 460, 100)
+    signButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
+    signButton.setBounds(10, 290, 460, VIEW_HEIGHT_100)
     signButton.addActionListener(ApkSignButtonActionListener())
     mFrame.add(signButton)
 }
