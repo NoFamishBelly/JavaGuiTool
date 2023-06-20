@@ -1,6 +1,7 @@
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.io.File
 import javax.swing.*
 
 
@@ -102,19 +103,6 @@ private val signLayout = {
 
 
 /**
- * 选中文件的绝对路径
- */
-private fun filePathResult(): String? {
-    val fileChooser = JFileChooser()
-    val result = fileChooser.showOpenDialog(null)
-    if (result == JFileChooser.APPROVE_OPTION) {
-        val selectFile = fileChooser.selectedFile
-        return selectFile.absolutePath
-    }
-    return ""
-}
-
-/**
  * 点击选择密钥
  */
 private class SelectSignFileButtonActionListener : ActionListener {
@@ -161,17 +149,18 @@ private class SignButtonActionListener : ActionListener {
 }
 
 
+/**
+ * 签名进程
+ */
 private fun signProcess() {
     val signFile = mSignFileField.text
     val installationPackage = mInstallationPackageField.text
     val signFileAlias = mSelectedSignFileAliasField.text
 
     try {
-        val index = installationPackage.lastIndexOf("\\")
-        val outputPath = installationPackage.substring(0, index)
-
+        val signPackage = if (installationPackage.endsWith(".apk")) "signed.apk" else "signed.aab "
         val cmd =
-            "jarsigner -verbose -keystore $signFile -signedjar $outputPath\\signed.aab $installationPackage $signFileAlias"
+            "jarsigner -verbose -keystore $signFile -signedjar $signPackage $installationPackage $signFileAlias"
 
         val pb = ProcessBuilder("cmd", "/c", "start $cmd")
         val process = pb.start()
