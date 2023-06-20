@@ -159,35 +159,8 @@ private fun signProcess() {
     val supportV2 = if (mV2CheckBox.isSelected) "--v2-signing-enabled true" else "--v2-signing-enabled false"
     val supportV3 = if (mV3CheckBox.isSelected) "--v3-signing-enabled true" else "--v3-signing-enabled false"
 
-    try {
-        val cmd = "apksigner sign --ks $signFile $supportV1 $supportV2 $supportV3 $installationPackage"
-
-        val pb = ProcessBuilder("cmd", "/c", "start $cmd")
-        val process = pb.start()
-
-//        // 获取命令行窗口输出流
-//        val inputStream = process.inputStream
-//        val reader = BufferedReader(InputStreamReader(inputStream))
-//
-//        // 读取输出信息
-//        var line: String?
-//        while (reader.readLine().also { line = it } != null) {
-//            println(line)
-//        }
-
-        // 等待命令执行完成
-        val exitCode: Int = process.waitFor()
-        println("Exit Code: $exitCode")
-
-//        // 关闭资源
-//        reader.close()
-//        inputStream.close()
-
-    } catch (e: Exception) {
-        e.printStackTrace()
-        println(e.message)
-        JOptionPane.showMessageDialog(null, e.message)
-    }
+    val cmd = "apksigner sign --ks $signFile $supportV1 $supportV2 $supportV3 $installationPackage"
+    cmdProcess(cmd)
 }
 
 
