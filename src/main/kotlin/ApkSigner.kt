@@ -7,11 +7,15 @@ private val mFrame by lazy {
     JFrame("签名工具 apksigner")
 }
 
+private val mInstallationPackageField by lazy {
+    JTextField()
+}
+
 private val mSignFileField by lazy {
     JTextField()
 }
 
-private val mInstallationPackageField by lazy {
+private val mSignFilePasswordField by lazy {
     JTextField()
 }
 
@@ -37,25 +41,11 @@ fun main() {
 
 
 private fun setLayout() {
-    selectSignFileLayout()
     selectInstallationPackageLayout()
+    selectSignFileLayout()
+    selectSignFilePasswordLayout()
     chooseV1V2V3()
     signLayout()
-}
-
-
-/**
- * 选择签名文件布局
- */
-private val selectSignFileLayout = {
-    mSignFileField.setBounds(10, 10, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_100)
-    mFrame.add(mSignFileField)
-
-    val selectSignFileButton = JButton("选择签名文件")
-    selectSignFileButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
-    selectSignFileButton.setBounds(320, 10, BUTTON_WIDTH_150, VIEW_HEIGHT_100)
-    selectSignFileButton.addActionListener(ApkSelectSignFileButtonActionListener())
-    mFrame.add(selectSignFileButton)
 }
 
 
@@ -63,14 +53,42 @@ private val selectSignFileLayout = {
  * 选择安装包布局
  */
 private val selectInstallationPackageLayout = {
-    mInstallationPackageField.setBounds(10, 120, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_100)
+    mInstallationPackageField.setBounds(10, 10, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_50)
     mFrame.add(mInstallationPackageField)
 
     val selectInstallationPackageButton = JButton("选择apk")
     selectInstallationPackageButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
-    selectInstallationPackageButton.setBounds(320, 120, BUTTON_WIDTH_150, VIEW_HEIGHT_100)
+    selectInstallationPackageButton.setBounds(320, 10, BUTTON_WIDTH_150, VIEW_HEIGHT_50)
     selectInstallationPackageButton.addActionListener(ApkSelectInstallationPackageButtonActionListener())
     mFrame.add(selectInstallationPackageButton)
+}
+
+
+/**
+ * 选择签名文件布局
+ */
+private val selectSignFileLayout = {
+    mSignFileField.setBounds(10, 70, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_50)
+    mFrame.add(mSignFileField)
+
+    val selectSignFileButton = JButton("选择签名文件")
+    selectSignFileButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
+    selectSignFileButton.setBounds(320, 70, BUTTON_WIDTH_150, VIEW_HEIGHT_50)
+    selectSignFileButton.addActionListener(ApkSelectSignFileButtonActionListener())
+    mFrame.add(selectSignFileButton)
+}
+
+
+/**
+ * 签名文件密钥
+ */
+private val selectSignFilePasswordLayout = {
+    val signFilePasswordLabel = JLabel("输入签名文件密钥")
+    signFilePasswordLabel.setBounds(10, 130, 460, 30)
+    mFrame.add(signFilePasswordLabel)
+
+    mSignFilePasswordField.setBounds(10, 170, 460, VIEW_HEIGHT_50)
+    mFrame.add(mSignFilePasswordField)
 }
 
 
@@ -95,7 +113,7 @@ private val chooseV1V2V3 = {
 private val signLayout = {
     val signButton = JButton("签名")
     signButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
-    signButton.setBounds(10, 290, 460, VIEW_HEIGHT_100)
+    signButton.setBounds(10, 290, 460, VIEW_HEIGHT_50)
     signButton.addActionListener(ApkSignButtonActionListener())
     mFrame.add(signButton)
 }
@@ -143,6 +161,12 @@ private class ApkSignButtonActionListener : ActionListener {
             return
         }
 
+        if (mSignFilePasswordField.text.isEmpty()) {
+            //签名文件密码为空
+            JOptionPane.showMessageDialog(null, "签名文件密码不可为空")
+            return
+        }
+
         signProcess()
     }
 }
@@ -154,13 +178,15 @@ private class ApkSignButtonActionListener : ActionListener {
 private fun signProcess() {
     val signFile = mSignFileField.text
     val installationPackage = mInstallationPackageField.text
+    val signFilePassword = mSignFilePasswordField.text
 
     val supportV1 = if (mV1CheckBox.isSelected) "--v1-signing-enabled true" else "--v1-signing-enabled false"
     val supportV2 = if (mV2CheckBox.isSelected) "--v2-signing-enabled true" else "--v2-signing-enabled false"
     val supportV3 = if (mV3CheckBox.isSelected) "--v3-signing-enabled true" else "--v3-signing-enabled false"
 
-    val cmd = "apksigner sign --ks $signFile $supportV1 $supportV2 $supportV3 $installationPackage"
-    cmdProcess(cmd)
+//    val cmd = "apksigner sign --ks $signFile -storepass $signFilePassword $supportV1 $supportV2 $supportV3  $installationPackage"
+    val cmd = "apksigner sign --ks=$signFile --ks-pass=pass:$signFilePassword $supportV1 $supportV2 $supportV3  $installationPackage"
+    cmdProcessDialog(cmd)
 }
 
 
@@ -171,7 +197,7 @@ private fun initFrame() {
         //禁止最大化
         isResizable = false
         //设置高/宽/位置
-        setBounds(500, 200, 500, 440)
+        setBounds(500, 200, 500, 400)
         //可见
         isVisible = true
     }

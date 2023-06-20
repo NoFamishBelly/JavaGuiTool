@@ -20,6 +20,10 @@ private val mSelectedSignFileAliasField by lazy {
 }
 
 
+private val mSelectedSignFilePasswordField by lazy {
+    JTextField()
+}
+
 fun main() {
     //绝对布局
     mFrame.layout = null
@@ -35,6 +39,7 @@ private fun setLayout() {
     selectSignFileLayout()
     selectInstallationPackageLayout()
     selectSignFileAliasLayout()
+    selectSignFilePasswordLayout()
     signLayout()
 }
 
@@ -43,12 +48,12 @@ private fun setLayout() {
  * 选择签名文件布局
  */
 private val selectSignFileLayout = {
-    mSignFileField.setBounds(10, 10, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_100)
+    mSignFileField.setBounds(10, 10, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_50)
     mFrame.add(mSignFileField)
 
     val selectSignFileButton = JButton("选择签名文件")
     selectSignFileButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
-    selectSignFileButton.setBounds(320, 10, BUTTON_WIDTH_150, VIEW_HEIGHT_100)
+    selectSignFileButton.setBounds(320, 10, BUTTON_WIDTH_150, VIEW_HEIGHT_50)
     selectSignFileButton.addActionListener(SelectSignFileButtonActionListener())
     mFrame.add(selectSignFileButton)
 }
@@ -58,12 +63,12 @@ private val selectSignFileLayout = {
  * 选择安装包布局
  */
 private val selectInstallationPackageLayout = {
-    mInstallationPackageField.setBounds(10, 120, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_100)
+    mInstallationPackageField.setBounds(10, 70, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_50)
     mFrame.add(mInstallationPackageField)
 
     val selectInstallationPackageButton = JButton("选择apk/aab")
     selectInstallationPackageButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
-    selectInstallationPackageButton.setBounds(320, 120, BUTTON_WIDTH_150, VIEW_HEIGHT_100)
+    selectInstallationPackageButton.setBounds(320, 70, BUTTON_WIDTH_150, VIEW_HEIGHT_50)
     selectInstallationPackageButton.addActionListener(SelectInstallationPackageButtonActionListener())
     mFrame.add(selectInstallationPackageButton)
 }
@@ -74,11 +79,24 @@ private val selectInstallationPackageLayout = {
  */
 private val selectSignFileAliasLayout = {
     val aliasLabel = JLabel("输入签名文件的别名Alias")
-    aliasLabel.setBounds(10, 230, 400, 20)
+    aliasLabel.setBounds(10, 130, 400, 30)
     mFrame.add(aliasLabel)
 
-    mSelectedSignFileAliasField.setBounds(10, 260, 460, 40)
+    mSelectedSignFileAliasField.setBounds(10, 170, 460, VIEW_HEIGHT_50)
     mFrame.add(mSelectedSignFileAliasField)
+}
+
+
+/**
+ * 输入签名文件密码
+ */
+private val selectSignFilePasswordLayout = {
+    val aliasLabel = JLabel("输入签名文件的密钥")
+    aliasLabel.setBounds(10, 230, 400, 30)
+    mFrame.add(aliasLabel)
+
+    mSelectedSignFilePasswordField.setBounds(10, 270, 460, VIEW_HEIGHT_50)
+    mFrame.add(mSelectedSignFilePasswordField)
 }
 
 
@@ -88,7 +106,7 @@ private val selectSignFileAliasLayout = {
 private val signLayout = {
     val signButton = JButton("签名")
     signButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
-    signButton.setBounds(10, 310, 460, VIEW_HEIGHT_100)
+    signButton.setBounds(10, 330, 460, VIEW_HEIGHT_50)
     signButton.addActionListener(SignButtonActionListener())
     mFrame.add(signButton)
 }
@@ -136,6 +154,12 @@ private class SignButtonActionListener : ActionListener {
             JOptionPane.showMessageDialog(null, "签名文件别名不可为空")
             return
         }
+
+        if (mSelectedSignFilePasswordField.text.isEmpty()) {
+            //签名文件密钥为空
+            JOptionPane.showMessageDialog(null, "签名文件密钥不可为空")
+            return
+        }
         signProcess()
     }
 }
@@ -148,12 +172,12 @@ private fun signProcess() {
     val signFile = mSignFileField.text
     val installationPackage = mInstallationPackageField.text
     val signFileAlias = mSelectedSignFileAliasField.text
+    val signFilePassword = mSelectedSignFilePasswordField.text
 
     val signPackage = if (installationPackage.endsWith(".apk")) "signed.apk" else "signed.aab "
     val cmd =
-        "jarsigner -verbose -keystore $signFile -signedjar $signPackage $installationPackage $signFileAlias"
-
-    cmdProcess(cmd)
+        "jarsigner -verbose -keystore $signFile  -storepass $signFilePassword -signedjar $signPackage $installationPackage $signFileAlias"
+    cmdProcessDialog(cmd)
 }
 
 
@@ -164,7 +188,7 @@ private fun initFrame() {
         //禁止最大化
         isResizable = false
         //设置高/宽/位置
-        setBounds(500, 200, 500, 460)
+        setBounds(500, 200, 500, 430)
         //可见
         isVisible = true
     }

@@ -1,8 +1,9 @@
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStreamReader
-import javax.swing.JFileChooser
-import javax.swing.JOptionPane
+import java.awt.Dimension
+import java.io.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import javax.swing.*
+
 
 const val TEXT_FIELD_WIDTH_300 = 300
 const val BUTTON_WIDTH_150 = 150
@@ -56,11 +57,11 @@ fun cmdProcess(cmd: String?) {
  * 开启cmd进程
  */
 fun cmdProcessDialog(cmd: String?) {
+    val message = StringBuilder("")
     cmd?.let {
         try {
             val reader =
                 BufferedReader(InputStreamReader(Runtime.getRuntime().exec("cmd /c  $it").inputStream, "GB2312"))
-            val message = StringBuilder("")
             var line: String? = reader.readLine()
             while (line != null) {
                 message.append(line).append("\n")
@@ -68,9 +69,9 @@ fun cmdProcessDialog(cmd: String?) {
                 println(line)
             }
             if (message.toString() != "") {
-                JOptionPane.showMessageDialog(null, message.toString(), "提示信息", JOptionPane.INFORMATION_MESSAGE)
+//                JOptionPane.showMessageDialog(null, message.toString(), "提示信息", JOptionPane.INFORMATION_MESSAGE)
+                showScrollDialog(message.toString())
             }
-
         } catch (e: Exception) {
             e.printStackTrace()
             println(e.message)
@@ -79,4 +80,26 @@ fun cmdProcessDialog(cmd: String?) {
     }
 }
 
+
+fun getLocalTime(): String {
+    val currentTime = LocalDateTime.now()
+    val formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss")
+    return currentTime.format(formatter)
+}
+
+
+fun showScrollDialog(message: String) {
+    val textArea = JTextArea(message)
+    textArea.isEditable = false
+    val scrollPane = JScrollPane(textArea)
+    scrollPane.preferredSize = Dimension(600, 300)
+
+    val dialog = JDialog()
+    dialog.title = "提示信息"
+    dialog.contentPane = scrollPane
+    dialog.isModal = true
+    dialog.pack()
+    dialog.setLocationRelativeTo(null)
+    dialog.isVisible = true
+}
 
