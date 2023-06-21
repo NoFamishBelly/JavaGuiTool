@@ -183,9 +183,7 @@ private fun aab2apkProcess() {
     val signFileAlias = mSelectSignFileAliasField.text
     val signFilePassword = mSelectSignFilePasswordField.text
 
-    val currentTime = getLocalTime()
-
-    val apks = "apk_$currentTime.apks"
+    val apks = "apk_${getLocalTime()}.apks"
 
     val cmd =
         "java -jar bundletool.jar build-apks --bundle=$aabFile --output=$apks --ks=$signFile --ks-pass=pass:$signFilePassword --ks-key-alias=$signFileAlias --key-pass=pass:$signFilePassword"
