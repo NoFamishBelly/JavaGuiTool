@@ -1,6 +1,7 @@
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.lang.StringBuilder
 import javax.swing.*
 
 private val mFrame by lazy {
@@ -184,10 +185,21 @@ private fun signProcess() {
     val supportV2 = if (mV2CheckBox.isSelected) "--v2-signing-enabled true" else "--v2-signing-enabled false"
     val supportV3 = if (mV3CheckBox.isSelected) "--v3-signing-enabled true" else "--v3-signing-enabled false"
 
-    val currentTime = getLocalTime()
 
-    val cmd = "apksigner sign --ks=$signFile --ks-pass=pass:$signFilePassword $supportV1 $supportV2 $supportV3  --out signed_$currentTime.apk $installationPackage"
-    cmdProcessDialog(cmd)
+    val signedApk = "signed_${getLocalTime()}.apk"
+
+    val cmd =
+        "apksigner sign --ks=$signFile --ks-pass=pass:$signFilePassword $supportV1 $supportV2 $supportV3  --out $signedApk $installationPackage"
+
+    val tips = StringBuilder()
+        .append("      ").append("签名完成").append("\n")
+        .append("      ").append("生成文件:  $signedApk").append("\n\n")
+        .append("      ").append("注：若未生成$signedApk, 则签名失败")
+
+    cmdProcessDialog(
+        cmd,
+        tips.toString()
+    )
 }
 
 

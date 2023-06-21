@@ -1,6 +1,7 @@
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.lang.StringBuilder
 import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JLabel
@@ -16,7 +17,6 @@ private val mFrame by lazy {
 private val mInstallationPackageField by lazy {
     JTextField()
 }
-
 
 
 fun main() {
@@ -84,9 +84,6 @@ private val checkInstallationPackageSignInfoLayout = {
 }
 
 
-
-
-
 /**
  * 点击选择安装包apk
  */
@@ -107,9 +104,9 @@ private class ApkVerifySignButtonActionListener : ActionListener {
             return
         }
 
-        if (mInstallationPackageField.text.endsWith(".aab")) {
-            //不支持aab
-            JOptionPane.showMessageDialog(null, "不支持aab")
+        if (!mInstallationPackageField.text.endsWith(".apk")) {
+            //仅支持apk
+            JOptionPane.showMessageDialog(null, "仅支持apk")
             return
         }
 
@@ -130,6 +127,13 @@ private class JarVerifySignButtonActionListener : ActionListener {
             return
         }
 
+
+        if (!(mInstallationPackageField.text.endsWith(".aab") || mInstallationPackageField.text.endsWith(".apk"))) {
+            //仅支持apk和aab
+            JOptionPane.showMessageDialog(null, "仅支持apk和aab")
+            return
+        }
+
         verifyJarSignProcess()
     }
 }
@@ -146,13 +150,16 @@ private class CheckInstallationPackageSignInfoButtonActionListener : ActionListe
             return
         }
 
+        if (!(mInstallationPackageField.text.endsWith(".aab") || mInstallationPackageField.text.endsWith(".apk"))) {
+            //仅支持apk和aab
+            JOptionPane.showMessageDialog(null, "仅支持apk和aab")
+            return
+        }
+
 
         checkInstallationPackageSignInfoProcess()
     }
 }
-
-
-
 
 
 /**
@@ -160,7 +167,14 @@ private class CheckInstallationPackageSignInfoButtonActionListener : ActionListe
  */
 private fun verifyApkSignProcess() {
     val cmd = "apksigner verify -v ${mInstallationPackageField.text}"
-    cmdProcessDialog(cmd)
+
+    val tips = StringBuilder()
+        .append("      ").append("若除此句无任何信息, 则为未签名apk").append("\n\n")
+
+    cmdProcessDialog(
+        cmd,
+        tips.toString()
+    )
 }
 
 

@@ -185,13 +185,16 @@ private fun aab2apkProcess() {
 
     val currentTime = getLocalTime()
 
+    val apks = "apk_$currentTime.apks"
+
     val cmd =
-        "java -jar bundletool.jar build-apks --bundle=$aabFile --output=apk_$currentTime.apks --ks=$signFile --ks-pass=pass:$signFilePassword --ks-key-alias=$signFileAlias --key-pass=pass:$signFilePassword"
+        "java -jar bundletool.jar build-apks --bundle=$aabFile --output=$apks --ks=$signFile --ks-pass=pass:$signFilePassword --ks-key-alias=$signFileAlias --key-pass=pass:$signFilePassword"
 
     val tips = StringBuilder()
         .append("      ").append("转换完成").append("\n")
-        .append("      ").append("生成文件:  apk_$currentTime.apks").append("\n")
-        .append("      ").append("将.apks文件修改为zip文件, 然后解压, 即可得到apk").append("\n")
+        .append("      ").append("生成文件:  $apks").append("\n")
+        .append("      ").append("将.apks文件修改为.zip文件, 然后解压, 即可得到apk").append("\n\n")
+        .append("      ").append("注：若未生成$apks, 则转换失败")
 
 
     cmdProcessDialog(
