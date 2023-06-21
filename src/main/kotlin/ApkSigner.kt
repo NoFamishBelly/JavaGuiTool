@@ -84,7 +84,7 @@ private val selectSignFileLayout = {
  */
 private val selectSignFilePasswordLayout = {
     val signFilePasswordLabel = JLabel("输入签名文件密钥")
-    signFilePasswordLabel.setBounds(10, 130, 460, 30)
+    signFilePasswordLabel.setBounds(10, 130, 460, VIEW_LABEL_HEIGHT)
     mFrame.add(signFilePasswordLabel)
 
     mSignFilePasswordField.setBounds(10, 170, 460, VIEW_HEIGHT_50)
@@ -184,8 +184,9 @@ private fun signProcess() {
     val supportV2 = if (mV2CheckBox.isSelected) "--v2-signing-enabled true" else "--v2-signing-enabled false"
     val supportV3 = if (mV3CheckBox.isSelected) "--v3-signing-enabled true" else "--v3-signing-enabled false"
 
-//    val cmd = "apksigner sign --ks $signFile -storepass $signFilePassword $supportV1 $supportV2 $supportV3  $installationPackage"
-    val cmd = "apksigner sign --ks=$signFile --ks-pass=pass:$signFilePassword $supportV1 $supportV2 $supportV3  $installationPackage"
+    val currentTime = getLocalTime()
+
+    val cmd = "apksigner sign --ks=$signFile --ks-pass=pass:$signFilePassword $supportV1 $supportV2 $supportV3  --out signed_$currentTime.apk $installationPackage"
     cmdProcessDialog(cmd)
 }
 

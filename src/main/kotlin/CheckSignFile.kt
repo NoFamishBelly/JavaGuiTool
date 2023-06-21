@@ -38,12 +38,12 @@ private fun setLayout() {
  * 选择签名文件的信息
  */
 private val selectSignFileInfoLayout = {
-    mSelectSignFileInfoField.setBounds(10, 10, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_100)
+    mSelectSignFileInfoField.setBounds(10, 10, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_50)
     mFrame.add(mSelectSignFileInfoField)
 
     val selectSignFileButton = JButton("选择签名文件")
     selectSignFileButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
-    selectSignFileButton.setBounds(320, 10, BUTTON_WIDTH_150, VIEW_HEIGHT_100)
+    selectSignFileButton.setBounds(320, 10, BUTTON_WIDTH_150, VIEW_HEIGHT_50)
     selectSignFileButton.addActionListener(SelectSignFileInfoButtonActionListener())
     mFrame.add(selectSignFileButton)
 }
@@ -55,10 +55,10 @@ private val selectSignFileInfoLayout = {
 private val signFilePasswordLayout = {
 
     val signFilePasswordLabel = JLabel("输入签名文件密钥")
-    signFilePasswordLabel.setBounds(10, 120, 460, 30)
+    signFilePasswordLabel.setBounds(10, 70, 460, VIEW_LABEL_HEIGHT)
     mFrame.add(signFilePasswordLabel)
 
-    mSignFilePasswordField.setBounds(10, 160, 460, VIEW_HEIGHT_100)
+    mSignFilePasswordField.setBounds(10, 110, 460, VIEW_HEIGHT_50)
     mFrame.add(mSignFilePasswordField)
 }
 
@@ -69,7 +69,7 @@ private val signFilePasswordLayout = {
 private val checkSignFileInfo = {
     val checkSignFileInfoButton = JButton("查看签名文件信息")
     checkSignFileInfoButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
-    checkSignFileInfoButton.setBounds(10, 270, 460, VIEW_HEIGHT_100)
+    checkSignFileInfoButton.setBounds(10, 170, 460, VIEW_HEIGHT_50)
     checkSignFileInfoButton.addActionListener(CheckSignFileInfoButtonActionListener())
     mFrame.add(checkSignFileInfoButton)
 }
@@ -120,7 +120,7 @@ private fun initFrame() {
         //禁止最大化
         isResizable = false
         //设置高/宽/位置
-        setBounds(500, 150, 500, 430)
+        setBounds(500, 250, 500, 270)
         //可见
         isVisible = true
     }

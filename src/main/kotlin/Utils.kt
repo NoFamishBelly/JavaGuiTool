@@ -10,6 +10,7 @@ const val BUTTON_WIDTH_150 = 150
 const val BUTTON_TEXT_SIZE_16 = 16
 const val VIEW_HEIGHT_100 = 100
 const val VIEW_HEIGHT_50 = 50
+const val VIEW_LABEL_HEIGHT = 30
 
 const val CURRENT_DIR = "user.dir"
 
@@ -56,15 +57,21 @@ fun cmdProcess(cmd: String?) {
 /**
  * 开启cmd进程
  */
-fun cmdProcessDialog(cmd: String?) {
-    val message = StringBuilder("")
+fun cmdProcessDialog(
+    cmd: String?,
+    tips: String = ""
+) {
+    val message = StringBuilder("\n")
+    if (tips.isNotEmpty()) {
+        message.append(tips).append("\n")
+    }
     cmd?.let {
         try {
             val reader =
                 BufferedReader(InputStreamReader(Runtime.getRuntime().exec("cmd /c  $it").inputStream, "GB2312"))
             var line: String? = reader.readLine()
             while (line != null) {
-                message.append(line).append("\n")
+                message.append("      ").append(line).append("\n")
                 line = reader.readLine()
                 println(line)
             }
@@ -83,7 +90,7 @@ fun cmdProcessDialog(cmd: String?) {
 
 fun getLocalTime(): String {
     val currentTime = LocalDateTime.now()
-    val formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss")
+    val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
     return currentTime.format(formatter)
 }
 

@@ -79,7 +79,7 @@ private val selectInstallationPackageLayout = {
  */
 private val selectSignFileAliasLayout = {
     val aliasLabel = JLabel("输入签名文件的别名Alias")
-    aliasLabel.setBounds(10, 130, 400, 30)
+    aliasLabel.setBounds(10, 130, 400, VIEW_LABEL_HEIGHT)
     mFrame.add(aliasLabel)
 
     mSelectedSignFileAliasField.setBounds(10, 170, 460, VIEW_HEIGHT_50)
@@ -92,7 +92,7 @@ private val selectSignFileAliasLayout = {
  */
 private val selectSignFilePasswordLayout = {
     val aliasLabel = JLabel("输入签名文件的密钥")
-    aliasLabel.setBounds(10, 230, 400, 30)
+    aliasLabel.setBounds(10, 230, 400, VIEW_LABEL_HEIGHT)
     mFrame.add(aliasLabel)
 
     mSelectedSignFilePasswordField.setBounds(10, 270, 460, VIEW_HEIGHT_50)
@@ -174,7 +174,9 @@ private fun signProcess() {
     val signFileAlias = mSelectedSignFileAliasField.text
     val signFilePassword = mSelectedSignFilePasswordField.text
 
-    val signPackage = if (installationPackage.endsWith(".apk")) "signed.apk" else "signed.aab "
+    val currentTime = getLocalTime()
+
+    val signPackage = if (installationPackage.endsWith(".apk")) "signed_$currentTime.apk" else "signed_$currentTime.aab "
     val cmd =
         "jarsigner -verbose -keystore $signFile  -storepass $signFilePassword -signedjar $signPackage $installationPackage $signFileAlias"
     cmdProcessDialog(cmd)
