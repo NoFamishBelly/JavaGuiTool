@@ -90,7 +90,7 @@ private val inputSignFileAliasLayout = {
  * 输入签名文件密钥
  */
 private val inputSignFilePasswordLayout = {
-    val signFilePasswordLabel = JLabel("输入签名文件别名")
+    val signFilePasswordLabel = JLabel("输入签名文件密码")
     signFilePasswordLabel.setBounds(10, 230, 460, VIEW_LABEL_HEIGHT)
     mFrame.add(signFilePasswordLabel)
 
