@@ -36,8 +36,8 @@ fun main() {
  * 设置布局
  */
 private fun setLayout() {
-    selectSignFileLayout()
     selectInstallationPackageLayout()
+    selectSignFileLayout()
     selectSignFileAliasLayout()
     selectSignFilePasswordLayout()
     signLayout()
@@ -45,32 +45,31 @@ private fun setLayout() {
 
 
 /**
- * 选择签名文件布局
- */
-private val selectSignFileLayout = {
-    mSignFileField.setBounds(10, 10, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_50)
-    mFrame.add(mSignFileField)
-
-    val selectSignFileButton = JButton("选择签名文件")
-    selectSignFileButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
-    selectSignFileButton.setBounds(320, 10, BUTTON_WIDTH_150, VIEW_HEIGHT_50)
-    selectSignFileButton.addActionListener(SelectSignFileButtonActionListener())
-    mFrame.add(selectSignFileButton)
-}
-
-
-/**
  * 选择安装包布局
  */
 private val selectInstallationPackageLayout = {
-    mInstallationPackageField.setBounds(10, 70, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_50)
+    mInstallationPackageField.setBounds(10, 10, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_50)
     mFrame.add(mInstallationPackageField)
 
     val selectInstallationPackageButton = JButton("选择apk/aab")
     selectInstallationPackageButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
-    selectInstallationPackageButton.setBounds(320, 70, BUTTON_WIDTH_150, VIEW_HEIGHT_50)
+    selectInstallationPackageButton.setBounds(320, 10, BUTTON_WIDTH_150, VIEW_HEIGHT_50)
     selectInstallationPackageButton.addActionListener(SelectInstallationPackageButtonActionListener())
     mFrame.add(selectInstallationPackageButton)
+}
+
+/**
+ * 选择签名文件布局
+ */
+private val selectSignFileLayout = {
+    mSignFileField.setBounds(10, 70, TEXT_FIELD_WIDTH_300, VIEW_HEIGHT_50)
+    mFrame.add(mSignFileField)
+
+    val selectSignFileButton = JButton("选择签名文件")
+    selectSignFileButton.font = Font("", Font.BOLD, BUTTON_TEXT_SIZE_16)
+    selectSignFileButton.setBounds(320, 70, BUTTON_WIDTH_150, VIEW_HEIGHT_50)
+    selectSignFileButton.addActionListener(SelectSignFileButtonActionListener())
+    mFrame.add(selectSignFileButton)
 }
 
 
@@ -176,7 +175,8 @@ private fun signProcess() {
 
     val currentTime = getLocalTime()
 
-    val signPackage = if (installationPackage.endsWith(".apk")) "signed_$currentTime.apk" else "signed_$currentTime.aab "
+    val signPackage =
+        if (installationPackage.endsWith(".apk")) "signed_$currentTime.apk" else "signed_$currentTime.aab "
     val cmd =
         "jarsigner -verbose -keystore $signFile  -storepass $signFilePassword -signedjar $signPackage $installationPackage $signFileAlias"
     cmdProcessDialog(cmd)
